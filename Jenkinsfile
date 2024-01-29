@@ -4,7 +4,7 @@ pipeline {
     environment {
         registry = '126124269786.dkr.ecr.us-east-1.amazonaws.com/hello-world-app'
         imageName = 'hello-world-app'
-        gitCredentials = 'github_madhukar'
+        gitCredentials = 'githubintegration'
         awsCredentials = 'madhukar_aws'
     }
 
@@ -22,9 +22,9 @@ pipeline {
             steps {
                 script {
                     withCredentials([[
-                        $class: 'AmazonWebServicesCredentialsBinding'
-                        credentialsId: 'madhukar_aws'
-                        accessKeyVariable: 'AWS_ACCESS_KEY'
+                        $class: 'AmazonWebServicesCredentialsBinding',
+                        credentialsId: 'madhukar_aws',
+                        accessKeyVariable: 'AWS_ACCESS_KEY',
                         secrectKeyvariable: 'AWS_SECRECT_KEY']]) {
                         sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 126124269786.dkr.ecr.us-east-1.amazonaws.com"
                         sh "docker build -t hello-world-app ."
