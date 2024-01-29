@@ -18,32 +18,18 @@ pipeline {
             }
         }
 
-        stage('Build and Test') {
+        stage('Build docker Image and Push to ECR') {
             steps {
                 script {
-                    // Add your Node.js build and test commands here
-                    sh 'npm install'
-                    sh 'npm test'
-                }
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: env.gitCredentials, usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-                        sh "docker build -t $registry/$imageName:$GIT_COMMIT ."
-                    }
-                }
-            }
-        }
-
-        stage('Push to ECR') {
-            steps {
-                script {
-                    withCredentials([aws(credentialsId: env.awsCredentials, region: 'your-ecr-region')]) {
-                        sh "aws ecr get-login-password --region your-ecr-region | docker login --username AWS --password-stdin $registry"
-                        sh "docker push $registry/$imageName:$GIT_COMMIT"
+                    withCredentials([[
+                        $class: 'AmazonWebServicesCredentialsBinding'
+                        credentialsId: 'madhukar_aws'
+                        accessKeyVariable: 'AWS_ACCESS_KEY'
+                        secrectKeyvariable: 'AWS_SECRECT_KEY']]) {
+                        sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 126124269786.dkr.ecr.us-east-1.amazonaws.com"
+                        sh "docker build -t hello-world-app ."
+                        sh "docker tag hello-world-app:latest 126124269786.dkr.ecr.us-east-1.amazonaws.com/hello-world-app:latest"
+                        sh "docker push 126124269786.dkr.ecr.us-east-1.amazonaws.com/hello-world-app:latest"
                     }
                 }
             }
