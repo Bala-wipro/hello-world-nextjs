@@ -8,9 +8,8 @@ COPY ./pages/_app*.js ./
 
 RUN ls -la /usr/src/app/
 
-RUN npm install
-
 COPY . .
+RUN npm install
 
 EXPOSE 3000
 
