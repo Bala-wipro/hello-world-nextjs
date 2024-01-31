@@ -5,6 +5,8 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 COPY /pages/api/index*.js ./
 
+RUN ls -la /usr/src/app/
+
 RUN npm install
 
 COPY . .
