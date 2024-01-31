@@ -3,7 +3,7 @@ FROM node:16
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-COPY /pages/api/index*.js ./
+COPY ./pages/index*.js ./
 
 RUN ls -la /usr/src/app/
 
